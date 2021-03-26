@@ -25,9 +25,23 @@
       Learn how to configure a non-root public URL by running `npm run build`.
     -->
     <title>React App</title>
+
+    <!-- Vendor css -->
+    <link
+      rel="stylesheet"
+      href="%PUBLIC_URL%/assets/vendors/@mdi/font/css/materialdesignicons.min.css"
+    />
+
+    <!-- Base css with customised bootstrap included -->
+    <link
+      rel="stylesheet"
+      href="%PUBLIC_URL%/assets/css/miri-ui-kit-free.css"
+    />
+
+    <!-- Stylesheet for demo page specific css -->
+    <link rel="stylesheet" href="%PUBLIC_URL%/assets/css/demo.css" />
   </head>
   <body>
-    <noscript>You need to enable JavaScript to run this app.</noscript>
     <div id="root"></div>
     <!--
       This HTML file is a template.
@@ -39,5 +53,9 @@
       To begin the development, run `npm start` or `yarn start`.
       To create a production bundle, use `npm run build` or `yarn build`.
     -->
+    <script src="%PUBLIC_URL%/assets/vendors/jquery/dist/jquery.min.js"></script>
+    <script src="%PUBLIC_URL%/assets/vendors/popper.js/dist/umd/popper.min.js"></script>
+    <script src="%PUBLIC_URL%/assets/vendors/bootstrap/dist/js/bootstrap.min.js"></script>
+    <script src="%PUBLIC_URL%/assets/js/miri-ui-kit.js"></script>
   </body>
 </html>
