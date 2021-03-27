@@ -98,7 +98,8 @@ function HomeScreen() {
     e.preventDefault()
     let formData = new FormData(e.target)
     const token = localStorage.getItem('token')
-    if (token === '') {
+    console.log(token)
+    if (token) {
       try {
         const data = await fetch(`${API_URL}api/createlaporan`, {
           method: 'POST',
@@ -365,9 +366,12 @@ function HomeScreen() {
           </div>
         </div>
       </section>
-      <section className="miri-ui-kit-section how-much-section">
+      <section
+        className="miri-ui-kit-section how-much-section"
+        style={{ marginBottom: '-16%' }}
+      >
         <img src="assets/images/tengah.png" style={{ width: '100%' }} />
-        <h2
+        <h1
           style={{
             position: 'relative',
             textAlign: 'center',
@@ -376,9 +380,14 @@ function HomeScreen() {
           className="text-white"
         >
           <b>JUMLAH LAPORAN TERKUMPUL</b>
-        </h2>
+        </h1>
         <h1
-          style={{ position: 'relative', textAlign: 'center', bottom: 440 }}
+          style={{
+            position: 'relative',
+            textAlign: 'center',
+            bottom: 440,
+            fontSize: '450%',
+          }}
           className="text-white"
         >
           <CountUp end={datalaporan.length} />

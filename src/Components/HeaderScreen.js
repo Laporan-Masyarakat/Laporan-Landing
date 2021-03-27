@@ -17,7 +17,7 @@ function HeaderScreen() {
     try {
       const getLogout = await fetch(`${API_URL}api/logout`, {
         headers: {
-          Authorization: `Bearer ${localStorage.getItem('token')}`,
+          Authorization: `Bearer ${token}`,
         },
       })
       const logout = await getLogout.json()

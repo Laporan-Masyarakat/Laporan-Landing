@@ -7,6 +7,10 @@ function LoginScreen() {
   const API_URL = `http://localhost:8000/`
   const MySwal = withReactContent(Swal)
 
+  if (localStorage.getItem('token')) {
+    window.location.href = '/'
+  }
+
   // function login
   const loginForm = async (e) => {
     e.preventDefault()
