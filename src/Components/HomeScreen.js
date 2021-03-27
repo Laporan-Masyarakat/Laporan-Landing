@@ -1,22 +1,18 @@
 import React, { useState, useEffect } from 'react'
 import CountUp from 'react-countup'
+import MySwal from 'sweetalert2'
+import withReactContent from 'sweetalert2-react-content'
+import HeaderScreen from './HeaderScreen'
 
 function HomeScreen() {
   const API_URL = `http://localhost:8000/`
+  const Swal = withReactContent(MySwal)
   const [dataprovinsi, setDataProvinsi] = useState('')
   const [idprov, setIdProv] = useState(1)
   const [datakota, setDataKota] = useState('')
   const [datainstansi, setDataInstansi] = useState('')
   const [datakategori, setDataKategori] = useState('')
   const [datalaporan, setDataLaporan] = useState('')
-  const [judullaporan, setJudulLaporan] = useState('')
-  const [isiLaporan, setIsiLaporan] = useState('')
-  const [tglkejadian, setTglKejadian] = useState('')
-  const [provinsi, setProvinsi] = useState('')
-  const [lokasikejadian, setLokasiKejadian] = useState('')
-  const [instansi, setInstansi] = useState('')
-  const [kategori, setKategori] = useState('')
-  const [fotolaporan, setFotoLaporan] = useState('')
 
   // fetch data Provinsi
   const fetchProvinsi = async () => {
@@ -101,19 +97,43 @@ function HomeScreen() {
   const onSubmit = async (e) => {
     e.preventDefault()
     let formData = new FormData(e.target)
-    try {
-      const data = await fetch(`${API_URL}api/createlaporan`. {
-        method: 'POST',
-        body: formData
-      })
-      const create = await data.json()
-      console.log(create)
-      if () {
-        
+    const token = localStorage.getItem('token')
+    if (token === '') {
+      try {
+        const data = await fetch(`${API_URL}api/createlaporan`, {
+          method: 'POST',
+          body: formData,
+        })
+        const create = await data.json()
+        if (create.success) {
+          Swal.fire({
+            icon: 'success',
+            title: 'Berhasil Menambah Data Laporan',
+            toast: true,
+            position: 'top-end',
+            showConfirmButton: false,
+            timer: 1000,
+            timerProgressBar: true,
+            didOpen: (toast) => {
+              toast.addEventListener('mouseenter', Swal.stopTimer)
+              toast.addEventListener('mouseleave', Swal.resumeTimer)
+            },
+          }).then(() => {
+            document.getElementById('formsubmit').reset()
+          })
+        }
+      } catch (error) {
+        console.log(error)
+        alert(error)
       }
-    } catch (error) {
-      console.log(error)
-      alert(error)
+    } else {
+      Swal.fire({
+        icon: 'error',
+        title: 'There is an error!',
+        html: '<p style="color: red;">You Must Login First!</p>',
+      }).then(() => {
+        window.location.href = '/login'
+      })
     }
   }
 
@@ -136,6 +156,8 @@ function HomeScreen() {
 
   return (
     <>
+      {/* Navbar Screen */}
+      <HeaderScreen />
       <section className="miri-ui-kit-section mt-5">
         <div className="container">
           <div className="d-md-flex justify-content-between row">
@@ -196,48 +218,53 @@ function HomeScreen() {
               >
                 <b>Sampaikan Laporan Anda</b>
               </h2>
-              <form onSubmit={(e) => onsubmit(e)}>
+              <form onSubmit={(e) => onSubmit(e)} id="formsubmit">
                 <div className="form-group">
-                  <label htmlFor="exampleFormControlTextarea1">
+                  <label>
                     <b>Judul Laporan</b>
                   </label>
                   <input
                     className="form-control"
                     placeholder="Masukkan Judul Laporan"
                     style={{ color: 'black', borderRadius: 10 }}
-                    value={}
+                    name="judul_laporan"
+                    required
                   />
                 </div>
                 <div className="form-group">
-                  <label htmlFor="exampleFormControlTextarea1">
+                  <label>
                     <b>Isi Laporan</b>
                   </label>
                   <input
                     className="form-control"
                     placeholder="Masukkan Isi Laporan"
                     style={{ color: 'black', borderRadius: 10 }}
+                    name="isi_laporan"
+                    required
                   />
                 </div>
                 <div className="form-group">
-                  <label htmlFor="exampleFormControlTextarea1">
+                  <label>
                     <b>Tanggal Kejadian</b>
                   </label>
                   <input
                     type="date"
                     className="form-control"
                     style={{ color: 'black', borderRadius: 10 }}
+                    name="tgl_pengaduan"
+                    required
                   />
                 </div>
                 <div className="form-group">
-                  <label htmlFor="exampleFormControlTextarea1">
+                  <label>
                     <b>Provinsi</b>
                   </label>
                   <select
                     class="form-control"
-                    id="exampleFormControlSelect1"
                     style={{ color: 'black', borderRadius: 10 }}
                     value={idprov}
                     onChange={(e) => setIdProv(e.target.value)}
+                    required
                   >
                     <option selected>Choose...</option>
                     {dataprovinsi.length > 0 ? (
@@ -250,13 +277,14 @@ function HomeScreen() {
                   </select>
                 </div>
                 <div className="form-group">
-                  <label htmlFor="exampleFormControlTextarea1">
+                  <label>
                     <b>Lokasi Kejadian</b>
                   </label>
                   <select
                     class="form-control"
-                    id="exampleFormControlSelect1"
                     style={{ color: 'black', borderRadius: 10 }}
+                    name="lokasi_kejadian"
+                    required
                   >
                     <option selected>Choose...</option>
                     {datakota.length > 0 ? (
@@ -269,13 +297,14 @@ function HomeScreen() {
                   </select>
                 </div>
                 <div className="form-group">
-                  <label htmlFor="exampleFormControlTextarea1">
+                  <label>
                     <b>Instansi Tujuan</b>
                   </label>
                   <select
                     class="form-control"
-                    id="exampleFormControlSelect1"
                     style={{ color: 'black', borderRadius: 10 }}
+                    name="instansi_tujuan"
+                    required
                   >
                     <option selected>Choose...</option>
                     {datainstansi.length > 0 ? (
@@ -290,13 +319,14 @@ function HomeScreen() {
                   </select>
                 </div>
                 <div className="form-group">
-                  <label htmlFor="exampleFormControlTextarea1">
+                  <label>
                     <b>Kategori Laporan</b>
                   </label>
                   <select
                     class="form-control"
-                    id="exampleFormControlSelect1"
                     style={{ color: 'black', borderRadius: 10 }}
+                    name="kategori_laporan"
+                    required
                   >
                     <option selected>Choose...</option>
                     {datakategori.length > 0 ? (
@@ -309,13 +339,14 @@ function HomeScreen() {
                   </select>
                 </div>
                 <div className="form-group">
-                  <label htmlFor="exampleFormControlFile1">
+                  <label>
                     <b>Masukkan Lampiran</b>
                   </label>
                   <input
                     type="file"
                     className="form-control-file"
-                    id="exampleFormControlFile1"
+                    name="foto_laporan"
+                    required
                   />
                 </div>
                 <button
@@ -340,14 +371,14 @@ function HomeScreen() {
           style={{
             position: 'relative',
             textAlign: 'center',
-            bottom: 470,
+            bottom: 460,
           }}
           className="text-white"
         >
           <b>JUMLAH LAPORAN TERKUMPUL</b>
         </h2>
         <h1
-          style={{ position: 'relative', textAlign: 'center', bottom: 450 }}
+          style={{ position: 'relative', textAlign: 'center', bottom: 440 }}
           className="text-white"
         >
           <CountUp end={datalaporan.length} />

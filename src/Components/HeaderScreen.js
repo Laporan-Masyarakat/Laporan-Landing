@@ -1,6 +1,36 @@
 import React from 'react'
+import Swal from 'sweetalert2'
+import withReactContent from 'sweetalert2-react-content'
 
 function HeaderScreen() {
+  const API_URL = `http://localhost:8000/`
+  const MySwal = withReactContent(Swal)
+  const token = localStorage.getItem('token')
+
+  const logoutFunc = async () => {
+    MySwal.fire({
+      title: 'currently logged out of account...',
+      didOpen: () => {
+        MySwal.showLoading()
+      },
+    })
+    try {
+      const getLogout = await fetch(`${API_URL}api/logout`, {
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem('token')}`,
+        },
+      })
+      const logout = await getLogout.json()
+      console.log(logout)
+      if (logout.success) {
+        localStorage.clear()
+        window.location.href = '/'
+        MySwal.close()
+      }
+    } catch (error) {
+      console.log(error)
+    }
+  }
   return (
     <>
       <header className="miri-ui-kit-header landing-header header-bg-2">
@@ -37,14 +67,75 @@ function HeaderScreen() {
             </button>
             <div className="collapse navbar-collapse" id="miriUiKitNavbar">
               <div className="navbar-nav ml-auto">
-                <li className="nav-item">
-                  <a className="nav-link" href="#">
-                    Login
-                  </a>
-                </li>
-                <form action="#" className="form-inline ml-lg-3">
-                  <button className="btn btn-light">Daftar</button>
-                </form>
+                {!token ? (
+                  <>
+                    <li className="nav-item">
+                      <a className="nav-link" href="/login">
+                        Login
+                      </a>
+                    </li>
+                    <form action="#" className="form-inline ml-lg-3">
+                      <button className="btn btn-light">Daftar</button>
+                    </form>
+                  </>
+                ) : (
+                  <>
+                    {/* User Dropdown*/}
+                    <li className="nav-item dropdown no-caret mr-3 mr-lg-0 dropdown-user">
+                      <a
+                        className="btn btn-icon btn-transparent-dark dropdown-toggle"
+                        id="navbarDropdownUserImage"
+                        href="#"
+                        role="button"
+                        data-toggle="dropdown"
+                        aria-haspopup="true"
+                        aria-expanded="false"
+                      >
+                        <img
+                          className="img-fluid"
+                          src={`https://ui-avatars.com/api/?name=${localStorage.getItem(
+                            'username',
+                          )}`}
+                          style={{
+                            borderRadius: 100,
+                            width: 50,
+                            marginRight: 10,
+                          }}
+                        />
+                      </a>
+                      <div
+                        className="dropdown-menu dropdown-menu-left border-0 shadow animated--fade-in-up"
+                        aria-labelledby="navbarDropdownUserImage"
+                      >
+                        <h6 className="dropdown-header d-flex align-items-center">
+                          <img
+                            className="dropdown-user-img"
+                            src={`https://ui-avatars.com/api/?name=${localStorage.getItem(
+                              'username',
+                            )}`}
+                            style={{
+                              borderRadius: 100,
+                              width: 50,
+                              marginRight: 10,
+                            }}
+                          />
+                          <div className="dropdown-user-details">
+                            <div className="dropdown-user-details-name text-black">
+                              {localStorage.getItem('username')}
+                            </div>
+                          </div>
+                        </h6>
+                        <div className="dropdown-divider" />
+                        <a className="dropdown-item" onClick={logoutFunc}>
+                          <div className="dropdown-item-icon">
+                            <i data-feather="log-out" />
+                          </div>
+                          Logout
+                        </a>
+                      </div>
+                    </li>
+                  </>
+                )}
               </div>
             </div>
           </div>
