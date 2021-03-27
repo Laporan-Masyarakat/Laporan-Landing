@@ -42,9 +42,12 @@ function HeaderLogin() {
                     Login
                   </a>
                 </li>
-                <form action="#" className="form-inline ml-lg-3">
-                  <button className="btn btn-light">Daftar</button>
-                </form>
+                <button
+                  className="btn btn-light ml-lg-3"
+                  onClick={() => (window.location.href = '/register')}
+                >
+                  Daftar
+                </button>
               </div>
             </div>
           </div>

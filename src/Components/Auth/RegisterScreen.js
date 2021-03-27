@@ -3,7 +3,7 @@ import HeaderLogin from '../HeaderLogin'
 import Swal from 'sweetalert2'
 import withReactContent from 'sweetalert2-react-content'
 
-function LoginScreen() {
+function RegisterScreen() {
   const API_URL = `http://localhost:8000/`
   const MySwal = withReactContent(Swal)
 
@@ -11,31 +11,28 @@ function LoginScreen() {
     window.location.href = '/'
   }
 
-  // function login
-  const loginForm = async (e) => {
+  // function register
+  const registerForm = async (e) => {
     e.preventDefault()
     let formData = new FormData(e.target)
 
     try {
-      const fetchLogin = await fetch(`${API_URL}api/login`, {
+      const fetchRegister = await fetch(`${API_URL}api/register`, {
         method: 'POST',
         body: formData,
       })
-      const datalogin = await fetchLogin.json()
-      console.log(datalogin)
-      if (datalogin.success) {
-        localStorage.setItem('username', datalogin.result.username)
-        localStorage.setItem('role', datalogin.result.role)
-        localStorage.setItem('token', datalogin.result.token)
-        localStorage.setItem('iduser', datalogin.result.iduser)
+      const dataregister = await fetchRegister.json()
+      console.log(dataregister)
+      if (dataregister.success) {
         MySwal.fire({
           title: 'Loading...',
-          timer: 1000,
+          text: 'Success Register',
+          timer: 1500,
           didOpen: () => {
             MySwal.showLoading()
           },
         }).then(() => {
-          window.location.href = '/'
+          window.location.href = '/login'
         })
       } else {
         MySwal.fire({
@@ -63,8 +60,17 @@ function LoginScreen() {
         }}
       >
         <div className="card-body shadow-lg" style={{ borderRadius: 5 }}>
-          <h3 className="text-center text-black mb-4">Log In</h3>
-          <form onSubmit={(e) => loginForm(e)}>
+          <h3 className="text-center text-black mb-4">Register</h3>
+          <form onSubmit={(e) => registerForm(e)}>
+            <div className="form-group">
+              <input
+                type="text"
+                placeholder="Username"
+                className="form-control"
+                style={{ borderRadius: 5 }}
+                name="username"
+              />
+            </div>
             <div className="form-group">
               <input
                 type="email"
@@ -95,4 +101,4 @@ function LoginScreen() {
   )
 }
 
-export default LoginScreen
+export default RegisterScreen
