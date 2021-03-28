@@ -220,6 +220,14 @@ function HomeScreen() {
                 <b>Sampaikan Laporan Anda</b>
               </h2>
               <form onSubmit={(e) => onSubmit(e)} id="formsubmit">
+                <input
+                  className="form-control"
+                  placeholder="Masukkan Judul Laporan"
+                  style={{ color: 'black', borderRadius: 10 }}
+                  value={localStorage.getItem('iduser')}
+                  name="id_user"
+                  type="hidden"
+                />
                 <div className="form-group">
                   <label>
                     <b>Judul Laporan</b>

@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useState, useEffect } from 'react'
 import Swal from 'sweetalert2'
 import withReactContent from 'sweetalert2-react-content'
 
@@ -6,6 +6,7 @@ function HeaderScreen() {
   const API_URL = `http://localhost:8000/`
   const MySwal = withReactContent(Swal)
   const token = localStorage.getItem('token')
+  const [datatanggapan, setDataTanggapan] = useState('')
 
   const logoutFunc = async () => {
     MySwal.fire({
@@ -31,6 +32,26 @@ function HeaderScreen() {
       console.log(error)
     }
   }
+
+  // get data tanggapan
+  const getTanggapan = async () => {
+    try {
+      const data = await fetch(`${API_URL}api/gettanggapan`, {
+        method: 'GET',
+      })
+      const result = await data.json()
+      console.log(result.result)
+      setDataTanggapan(result.result)
+    } catch (error) {
+      console.log(error)
+      alert(error)
+    }
+  }
+
+  useEffect(() => {
+    getTanggapan()
+  }, [])
+
   return (
     <>
       <header className="miri-ui-kit-header landing-header header-bg-2">
@@ -83,6 +104,70 @@ function HeaderScreen() {
                   </>
                 ) : (
                   <>
+                    {/* Alerts Dropdown*/}
+                    <li className="nav-item dropdown no-caret d-none d-sm-block dropdown-notifications">
+                      <a
+                        className="btn btn-icon btn-transparent-dark dropdown-toggle"
+                        id="navbarDropdownAlerts"
+                        href="javascript:void(0);"
+                        role="button"
+                        data-toggle="dropdown"
+                        aria-haspopup="true"
+                        aria-expanded="false"
+                      >
+                        <i className="mdi mdi-bell" />
+                      </a>
+                      <div
+                        className="dropdown-menu dropdown-menu-right border-0 shadow animated--fade-in-up"
+                        aria-labelledby="navbarDropdownAlerts"
+                        style={{ paddingBottom: 30 }}
+                      >
+                        <h6 className="dropdown-header dropdown-notifications-header">
+                          <i className="mdi mdi-bell mr-2" />
+                          Tanggapan
+                        </h6>
+                        {/* Example Alert 1*/}
+                        {datatanggapan.length > 0 ? (
+                          datatanggapan.map((item, i) => (
+                            <a
+                              className="dropdown-item dropdown-notifications-item"
+                              href="#!"
+                              key={i}
+                            >
+                              <div
+                                className="bg-secondary"
+                                style={{
+                                  width: 40,
+                                  height: 40,
+                                  borderRadius: 100,
+                                  marginRight: 20,
+                                  paddingTop: 5,
+                                }}
+                              >
+                                <i
+                                  className="mdi mdi-book"
+                                  style={{
+                                    color: 'white',
+                                    marginLeft: 10,
+                                    fontSize: 20,
+                                  }}
+                                />
+                              </div>
+                              <div className="dropdown-notifications-item-content">
+                                <div className="dropdown-notifications-item-content-details">
+                                  {item.tgl_tanggapan}
+                                </div>
+                                <div className="dropdown-notifications-item-content-text">
+                                  {item.isi_tanggapan}
+                                </div>
+                              </div>
+                            </a>
+                          ))
+                        ) : (
+                          <p className="text-center">Tidak Ada Tanggapan</p>
+                        )}
+                      </div>
+                    </li>
                     {/* User Dropdown*/}
                     <li className="nav-item dropdown no-caret mr-3 mr-lg-0 dropdown-user">
                       <a
