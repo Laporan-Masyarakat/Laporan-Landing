@@ -3,6 +3,7 @@ import CountUp from 'react-countup'
 import MySwal from 'sweetalert2'
 import withReactContent from 'sweetalert2-react-content'
 import HeaderScreen from './HeaderScreen'
+import LocationScreen from './LocationScreen'
 
 function HomeScreen() {
   const API_URL = `http://localhost:8000/`
@@ -402,28 +403,8 @@ function HomeScreen() {
         </h1>
       </section>
       <section class="footer-content text-center">
-        <h2>Ayo Segera Laporkan Aspirasi Anda</h2>
-        <p>
-          If there is something we can help you with, just let us know. We'll be
-          more than happy to offer you our help.
-        </p>
-        <button
-          class="btn mt-3"
-          style={{ backgroundColor: '#5EBAF0', color: 'white' }}
-        >
-          Lebih Dekat Dengan Kami
-        </button>
-        <p class="footer-social-links text-center my-4">
-          <a href="#" class="icon-fb">
-            <i class="mdi mdi-facebook-box"></i>
-          </a>
-          <a href="#" class="icon-twitter">
-            <i class="mdi mdi-twitter-box"></i>
-          </a>
-          <a href="#" class="icon-insta">
-            <i class="mdi mdi-instagram"></i>
-          </a>
-        </p>
+        <h2>Lokasi Berdasarkan Data Laporan</h2>
+        <LocationScreen />
       </section>
     </>
   )
